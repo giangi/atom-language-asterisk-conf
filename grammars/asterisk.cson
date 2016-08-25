@@ -1,0 +1,202 @@
+# Copyright (c) 2015 Gianluca Merlo
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# If this is your first time writing a language grammar, check out:
+#   - http://manual.macromates.com/en/language_grammars
+
+'scopeName': 'source.asterisk-conf'
+'name': 'Asterisk PBX Configuration'
+'fileTypes': [
+    'conf'
+]
+'patterns': [
+    { 'include': '#comment'}
+    { 'include': '#context'}
+    { 'include': '#string'}
+    { 'include': '#escape'}
+    { 'include': '#includefile'}
+    { 'include': '#assignment'}
+    { 'include': '#include'}
+    { 'include': '#exten'}
+    { 'include': '#same'}
+]
+'repository':
+    'comment':
+        'match': '((;).*?\\n)'
+        'captures':
+            '1':
+                'name': 'comment.line.semi-colon.asterisk'
+            '2':
+                'name': 'punctuation.definition.comment.asterisk'
+    'escape':
+        'name': 'constant.character.escape.asterisk'
+        'match': '\\\\.'
+    'context':
+        'match': '^(\\[)([\\w\\-]*?)(\\])'
+        'name': 'entity.name.section.context.asterisk'
+        'captures':
+            '1':
+                'name': 'punctuation.definition.context.asterisk'
+            '3':
+                'name': 'punctuation.definition.context.asterisk'
+    'variable':
+        'match': '((\\$\\{)[A-Za-z]\\w*(((:)(\\d+))((:)(\\d+))?)?(\\}))'
+        'captures':
+            '1':
+                'name': 'variable.asterisk'
+            '2':
+                'name': 'punctuation.definition.variable.start.asterisk'
+            '3':
+                'name': 'constant.substring.asterisk'
+            '4':
+                'name': 'constant.substring.start.asterisk'
+            '5':
+                'name': 'punctuation.definition.substring.start.asterisk'
+            '6':
+                'name': 'constant.numeric.substring.start.asterisk'
+            '7':
+                'name': 'constant.substring.length.asterisk'
+            '8':
+                'name': 'punctuation.definition.substring.length.asterisk'
+            '9':
+                'name': 'constant.numeric.substring.length.asterisk'
+            '10':
+                'name': 'punctuation.definition.variable.end.asterisk'
+    'string':
+        'name': 'string.quoted.double.asterisk'
+        'begin': '"'
+        'beginCaptures':
+            '0':
+                'name': 'punctuation.definition.string.begin.asterisk'
+        'end': '"'
+        'endCaptures':
+            '0':
+                'name': 'punctuation.definition.string.end.asterisk'
+        'patterns': [
+            {'include': '#escape'}
+            {'include': '#variable'}
+        ]
+    'assignment':
+        'match': '^(\\w+)\\s*(=)\\s*(.*?)$\\n'
+        'captures':
+            '1':
+                'name': 'variable.assignment.name.asterisk'
+            '2':
+                'name': 'keyword.operator.variable.assignment.asterisk'
+            '3':
+                'patterns': [
+                    { 'include': '#variable' }
+                    { 'include': '#comment' }
+                ]
+    'includefile':
+        'match': '^(#include)\\s+(.*)$\\n'
+        'captures':
+            '1':
+                'name': 'keyword.control.includefile.asterisk'
+            '2':
+                'name': 'string.include.file.asterisk'
+    'function':
+        'match': '([A-Z]+)(\\()(.*?)(\\))'
+        'captures':
+            '1':
+                'name': 'entity.name.function.function.asterisk'
+            '2':
+                'name': 'punctuation.definition.function.start.asterisk'
+            '3':
+                'patterns': [
+                    { 'include': '#assignment' }
+                    { 'include': '#variable' }
+                ]
+            '4':
+                'punctuation.definition.function.end.asterisk'
+    'application':
+        'match': '([A-Z]\\w+)(\\()(.*?)(\\))\s*?\\n'
+        'captures':
+            '1':
+                'name': 'entity.name.function.application.asterisk'
+            '2':
+                'name': 'punctuation.definition.application.start.asterisk'
+            '3':
+                'patterns': [
+                    { 'include': '#function'}
+                    { 'include': '#assignment' }
+                    { 'include': '#variable' }
+                ]
+            '4':
+                'punctuation.definition.application.end.asterisk'
+    'priority':
+        'match': '((\\d+|n)((\\()(\\w+)(\\)))?)'
+        'captures':
+            '1':
+                'name': 'constant.priority.asterisk'
+            '2':
+                'name': 'constant.numeric.priority.asterisk'
+            '3':
+                'name': 'constant.priority.label.asterisk'
+            '4':
+                'name': 'punctuation.definition.priority.label.start.asterisk'
+            '5':
+                'name': 'constant.priority.label.asterisk'
+            '6':
+                'name': 'punctuation.definition.priority.label.end.asterisk'
+    'include':
+        'match': '^\\s*(include)\\s+(=>)\\s+([\\w\\-]+)'
+        'captures':
+            '1':
+                'name': 'keyword.control.include.asterisk'
+            '2':
+                'name': 'keyword.operator.arrow.asterisk'
+            '3':
+                'name': 'entity.name.section.context.asterisk'
+    'exten':
+        'match': '^\\s*(exten)\\s+(=>)\\s+(.*?)(,)(.*?)(,)(.*?)$\\n'
+        'captures':
+            '1':
+                'name': 'keyword.control.exten.asterisk'
+            '2':
+                'name': 'keyword.operator.exten.asterisk'
+            '3':
+                'name': 'constant.extension.asterisk'
+            '4':
+                'name': 'punctuation.definition.extension.separator.asterisk'
+            '5':
+                'patterns': [
+                    { 'include': '#priority'}
+                ]
+            '6':
+                'name': 'punctuation.definition.extension.separator.asterisk'
+            '7':
+                'patterns': [
+                    { 'include': '#application' }
+                    { 'include': '#comment' }
+                ]
+    'same':
+        'match': '^\\s*(same)\\s+(=>)\\s+(.*?)(,)(.*?)$\\n'
+        'captures':
+            '1':
+                'name': 'keyword.control.same.asterisk'
+            '2':
+                'name': 'keyword.operator.exten.asterisk'
+            '3':
+                'patterns': [
+                    { 'include': '#priority'}
+                ]
+            '4':
+                'name': 'punctuation.definition.extension.separator.asterisk'
+            '5':
+                'patterns': [
+                    { 'include': '#application' }
+                    { 'include': '#comment' }
+                ]

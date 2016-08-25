@@ -1,0 +1,14 @@
+{
+  "name": "language-asterisk-conf",
+  "version": "0.0.1",
+  "description": "Asterisk PBX configuration files syntax",
+  "keywords": [
+    "language",
+    "grammar"
+  ],
+  "repository": "https://github.com/giangi/atom-language-asterisk-conf",
+  "license": "GPLv3",
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  }
+}
